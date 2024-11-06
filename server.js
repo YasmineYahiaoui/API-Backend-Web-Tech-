@@ -1,7 +1,7 @@
  
 const express = require('express');
 const bodyParser = require('body-parser');
-const categoryRoutes = require('./routes/categoryRoutes'); // Importer les routes de catégorie
+const categoryController = require('../controllers/categoryController'); // Importer les routes de catégorie
 
 const app = express();
 app.use(bodyParser.json()); // Middleware pour parser le JSON
