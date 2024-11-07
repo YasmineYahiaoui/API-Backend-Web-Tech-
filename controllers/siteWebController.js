@@ -1,53 +1,63 @@
-const SiteWeb = require('../models/SitWeb'); // Import du modèle
+const { SiteWeb } = require('../models/SiteWeb');
 
-const siteWebController = {
-  createSiteWeb: async (req, res) => {
-    try {
-      const siteWeb = await SiteWeb.create(req.body);
-      res.status(201).json(siteWeb);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  getSiteWebs: async (req, res) => {
-    try {
-      const siteWebs = await SiteWeb.findAll();
-      res.status(200).json(siteWebs);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  getSiteWebById: async (req, res) => {
-    try {
-      const siteWeb = await SiteWeb.findByPk(req.params.id);
-      if (!siteWeb) return res.status(404).json({ message: 'SiteWeb not found' });
-      res.status(200).json(siteWeb);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  updateSiteWeb: async (req, res) => {
-    try {
-      const siteWeb = await SiteWeb.update(req.body, { where: { id: req.params.id } });
-      if (!siteWeb[0]) return res.status(404).json({ message: 'SiteWeb not found' });
-      res.status(200).json({ message: 'SiteWeb updated successfully' });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  deleteSiteWeb: async (req, res) => {
-    try {
-      const siteWeb = await SiteWeb.destroy({ where: { id: req.params.id } });
-      if (!siteWeb) return res.status(404).json({ message: 'SiteWeb not found' });
-      res.status(204).send();
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
+exports.createSiteWeb = async (req, res) => {
+  try {
+    const siteWeb = await SiteWeb.create(req.body);
+    res.status(201).json(siteWeb);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating siteWeb', error });
+  }
 };
 
-module.exports = siteWebController;
+exports.getSiteWebs = async (req, res) => {
+  try {
+    const siteWebs = await SiteWeb.findAll();
+    res.json(siteWebs);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving siteWebs', error });
+  }
+};
+
+exports.getSiteWebById = async (req, res) => {
+  try {
+    const siteWeb = await SiteWeb.findOne({ where: { id: req.params.id } });
+    if (siteWeb) {
+      res.json(siteWeb);
+    } else {
+      res.status(404).json({ message: 'SiteWeb not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving siteWeb', error });
+  }
+};
+
+exports.updateSiteWeb = async (req, res) => {
+  try {
+    const [updated] = await SiteWeb.update(req.body, {
+      where: { id: req.params.id },
+    });
+    if (updated) {
+      const updatedSiteWeb = await SiteWeb.findOne({ where: { id: req.params.id } });
+      res.json(updatedSiteWeb);
+    } else {
+      res.status(404).json({ message: 'SiteWeb not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating siteWeb', error });
+  }
+};
+
+exports.deleteSiteWeb = async (req, res) => {
+  try {
+    const deleted = await SiteWeb.destroy({
+      where: { id: req.params.id },
+    });
+    if (deleted) {
+      res.status(204).json();
+    } else {
+      res.status(404).json({ message: 'SiteWeb not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting siteWeb', error });
+  }
+};

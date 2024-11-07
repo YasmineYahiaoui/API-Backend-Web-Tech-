@@ -16,11 +16,11 @@ router.put('/api/users/:id', userController.updateUser);
 router.delete('/api/users/:id', userController.deleteUser);
 
 // Projets
-router.post('/api/projects', projectController.createProject);
-router.get('/api/projects', projectController.getProjects);
-router.get('/api/projects/:id', projectController.getProjectById);
-router.put('/api/projects/:id', projectController.updateProject);
-router.delete('/api/projects/:id', projectController.deleteProject);
+router.post('/api/Project', projectController.createProject);
+router.get('/api/Project', projectController.getProjects);
+router.get('/api/Project/:id', projectController.getProjectById);
+router.put('/api/Project/:id', projectController.updateProject);
+router.delete('/api/Project/:id', projectController.deleteProject);
 
 // Logos
 router.post('/api/logos', logoController.createLogo);

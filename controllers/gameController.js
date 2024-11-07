@@ -1,59 +1,63 @@
-const Game = require('../models/Game'); // Import du modèle
+const { Game } = require('../models/Game');
 
-const gameController = {
-  createGame: async (req, res) => {
-    try {
-      const game = await Game.create(req.body);
-      res.status(201).json(game);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  getGames: async (req, res) => {
-    const { page = 1, limit = 10 } = req.query;
-    const offset = (page - 1) * limit;
-    try {
-      const games = await Game.findAndCountAll({ limit, offset });
-      res.status(200).json({
-        total: games.count,
-        pages: Math.ceil(games.count / limit),
-        data: games.rows,
-      });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  getGameById: async (req, res) => {
-    try {
-      const game = await Game.findByPk(req.params.id);
-      if (!game) return res.status(404).json({ message: 'Game not found' });
-      res.status(200).json(game);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  updateGame: async (req, res) => {
-    try {
-      const game = await Game.update(req.body, { where: { id: req.params.id } });
-      if (!game[0]) return res.status(404).json({ message: 'Game not found' });
-      res.status(200).json({ message: 'Game updated successfully' });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  deleteGame: async (req, res) => {
-    try {
-      const game = await Game.destroy({ where: { id: req.params.id } });
-      if (!game) return res.status(404).json({ message: 'Game not found' });
-      res.status(204).send();
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
+exports.createGame = async (req, res) => {
+  try {
+    const game = await Game.create(req.body);
+    res.status(201).json(game);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating game', error });
+  }
 };
 
-module.exports = gameController;
+exports.getGames = async (req, res) => {
+  try {
+    const games = await Game.findAll();
+    res.json(games);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving games', error });
+  }
+};
+
+exports.getGameById = async (req, res) => {
+  try {
+    const game = await Game.findOne({ where: { id: req.params.id } });
+    if (game) {
+      res.json(game);
+    } else {
+      res.status(404).json({ message: 'Game not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving game', error });
+  }
+};
+
+exports.updateGame = async (req, res) => {
+  try {
+    const [updated] = await Game.update(req.body, {
+      where: { id: req.params.id },
+    });
+    if (updated) {
+      const updatedGame = await Game.findOne({ where: { id: req.params.id } });
+      res.json(updatedGame);
+    } else {
+      res.status(404).json({ message: 'Game not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating game', error });
+  }
+};
+
+exports.deleteGame = async (req, res) => {
+  try {
+    const deleted = await Game.destroy({
+      where: { id: req.params.id },
+    });
+    if (deleted) {
+      res.status(204).json();
+    } else {
+      res.status(404).json({ message: 'Game not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting game', error });
+  }
+};

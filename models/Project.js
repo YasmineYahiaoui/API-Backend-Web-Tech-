@@ -1,28 +1,18 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../database');
+// models/project.js
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-class Project extends Model {}
-
-Project.init({
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  name: { // Nom du projet
+const Project = sequelize.define('Project', {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 }, {
-  sequelize,
-  modelName: 'Project',
   tableName: 'projects',
   timestamps: true,
 });
 
-// Relations entre les modèles
-Project.associate = (models) => {
-  Project.hasMany(models.Game, { foreignKey: 'projectId' });
-};
+// Relation : Un projet peut avoir plusieurs jeux
+Project.hasMany(require('./game'), { foreignKey: 'projectId' });
 
 module.exports = Project;

@@ -1,38 +1,29 @@
-module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define('User', {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      roleId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Roles',
-          key: 'id'
-        }
-      }
-    });
-    
-    User.associate = (models) => {
-      User.belongsTo(models.Role, { foreignKey: 'roleId' });
-      User.hasMany(models.Project, { foreignKey: 'userId' });
-    };
-    
-    return User;
-  };
-  
+// models/user.js
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
+const Role = require('./Role');  // Associer à Role
+
+const User = sequelize.define('User', {
+  username: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+  },
+}, {
+  tableName: 'users',
+  timestamps: true,
+});
+
+// Relation : Un utilisateur peut avoir plusieurs rôles
+User.hasMany(Role, { foreignKey: 'userId' });
+
+module.exports = User;

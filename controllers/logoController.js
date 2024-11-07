@@ -1,53 +1,63 @@
-const Logo = require('../models/Logo'); // Import du modèle
+const { Logo } = require('../models/Logo');
 
-const logoController = {
-  createLogo: async (req, res) => {
-    try {
-      const logo = await Logo.create(req.body);
-      res.status(201).json(logo);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  getLogos: async (req, res) => {
-    try {
-      const logos = await Logo.findAll();
-      res.status(200).json(logos);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  getLogoById: async (req, res) => {
-    try {
-      const logo = await Logo.findByPk(req.params.id);
-      if (!logo) return res.status(404).json({ message: 'Logo not found' });
-      res.status(200).json(logo);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  updateLogo: async (req, res) => {
-    try {
-      const logo = await Logo.update(req.body, { where: { id: req.params.id } });
-      if (!logo[0]) return res.status(404).json({ message: 'Logo not found' });
-      res.status(200).json({ message: 'Logo updated successfully' });
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
-
-  deleteLogo: async (req, res) => {
-    try {
-      const logo = await Logo.destroy({ where: { id: req.params.id } });
-      if (!logo) return res.status(404).json({ message: 'Logo not found' });
-      res.status(204).send();
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  },
+exports.createLogo = async (req, res) => {
+  try {
+    const logo = await Logo.create(req.body);
+    res.status(201).json(logo);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating logo', error });
+  }
 };
 
-module.exports = logoController;
+exports.getLogos = async (req, res) => {
+  try {
+    const logos = await Logo.findAll();
+    res.json(logos);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving logos', error });
+  }
+};
+
+exports.getLogoById = async (req, res) => {
+  try {
+    const logo = await Logo.findOne({ where: { id: req.params.id } });
+    if (logo) {
+      res.json(logo);
+    } else {
+      res.status(404).json({ message: 'Logo not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving logo', error });
+  }
+};
+
+exports.updateLogo = async (req, res) => {
+  try {
+    const [updated] = await Logo.update(req.body, {
+      where: { id: req.params.id },
+    });
+    if (updated) {
+      const updatedLogo = await Logo.findOne({ where: { id: req.params.id } });
+      res.json(updatedLogo);
+    } else {
+      res.status(404).json({ message: 'Logo not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating logo', error });
+  }
+};
+
+exports.deleteLogo = async (req, res) => {
+  try {
+    const deleted = await Logo.destroy({
+      where: { id: req.params.id },
+    });
+    if (deleted) {
+      res.status(204).json();
+    } else {
+      res.status(404).json({ message: 'Logo not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting logo', error });
+  }
+};
