@@ -1,5 +1,5 @@
 const express = require('express');
-const sequelize = require('./config/database');
+const sequelize = require('./database');
 const gameRoutes = require('./routes/gameRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const app = express();
