@@ -1,29 +1,25 @@
-// models/user.js
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const Role = require('./Role');  // Associer à Role
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Votre instance Sequelize
 
 const User = sequelize.define('User', {
-  username: {
-    type: DataTypes.STRING,
-    unique: true,
-    allowNull: false,
-  },
-  password: {
+  // Définissez les attributs de l'utilisateur ici
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   email: {
     type: DataTypes.STRING,
-    unique: true,
     allowNull: false,
+    unique: true,
   },
-}, {
-  tableName: 'users',
-  timestamps: true,
 });
 
-// Relation : Un utilisateur peut avoir plusieurs rôles
-User.hasMany(Role, { foreignKey: 'userId' });
+// Association avec le modèle 'Project' (assurez-vous que ce modèle est défini correctement)
+const Project = require('./project');  // Importer correctement le modèle Project
+
+User.hasMany(Project, {
+  foreignKey: 'userId',  // La clé étrangère dans Project
+  as: 'projects', // Alias pour l'association
+});
 
 module.exports = User;

@@ -1,18 +1,15 @@
-// models/project.js
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Project = sequelize.define('Project', {
-  name: {
+  title: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-}, {
-  tableName: 'projects',
-  timestamps: true,
+  description: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
-
-// Relation : Un projet peut avoir plusieurs jeux
-Project.hasMany(require('./game'), { foreignKey: 'projectId' });
 
 module.exports = Project;
