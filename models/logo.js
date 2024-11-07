@@ -9,17 +9,17 @@ Logo.init({
     autoIncrement: true,
     primaryKey: true,
   },
+  url: { // URL de l'image du logo
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   projectId: { // Identifiant du projet auquel le logo est associé
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Projects', // Assurez-vous que le modèle des projets est correct
+      model: 'Projects', // Le modèle des projets
       key: 'id'
     }
-  },
-  logoUrl: { // URL du logo
-    type: DataTypes.STRING,
-    allowNull: false,
   }
 }, {
   sequelize,
@@ -28,10 +28,9 @@ Logo.init({
   timestamps: true,
 });
 
-// Relations
+// Relations entre les modèles
 Logo.associate = (models) => {
   Logo.belongsTo(models.Project, { foreignKey: 'projectId' }); // Un logo appartient à un projet
 };
 
 module.exports = Logo;
-

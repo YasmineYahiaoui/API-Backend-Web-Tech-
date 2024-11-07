@@ -1,21 +1,11 @@
- 
 const express = require('express');
+const projectController = require('../controllers/projectController');
 const router = express.Router();
-const projectController = require('./controllers/projectController');
 
-// Créer un nouveau projet
-router.post('/', projectController.createProject);
-
-// Récupérer tous les projets avec pagination
-router.get('/', projectController.getProjects);
-
-// Récupérer un projet par ID
-router.get('/:id', projectController.getProjectById);
-
-// Mettre à jour un projet par ID
-router.put('/:id', projectController.updateProject);
-
-// Supprimer un projet par ID
-router.delete('/:id', projectController.deleteProject);
+router.post('/projects', projectController.createProject);
+router.get('/projects', projectController.getProjects);
+router.get('/projects/:id', projectController.getProjectById);
+router.put('/projects/:id', projectController.updateProject);
+router.delete('/projects/:id', projectController.deleteProject);
 
 module.exports = router;

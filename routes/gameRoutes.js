@@ -1,21 +1,11 @@
 const express = require('express');
+const gameController = require('../controllers/gameController');
 const router = express.Router();
-const gameController = require('./controllers/gameController');
 
-// Créer un nouveau jeu
-router.post('/', gameController.createGame);
-
-// Récupérer tous les jeux avec pagination
-router.get('/', gameController.getGames);
-
-// Récupérer un jeu par ID
-router.get('/:id', gameController.getGameById);
-
-// Mettre à jour un jeu par ID
-router.put('/:id', gameController.updateGame);
-
-// Supprimer un jeu par ID
-router.delete('/:id', gameController.deleteGame);
+router.post('/games', gameController.createGame);
+router.get('/games', gameController.getGames);
+router.get('/games/:id', gameController.getGameById);
+router.put('/games/:id', gameController.updateGame);
+router.delete('/games/:id', gameController.deleteGame);
 
 module.exports = router;
-

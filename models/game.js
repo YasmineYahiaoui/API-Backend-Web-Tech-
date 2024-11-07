@@ -21,7 +21,7 @@ Game.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Projects', // Assurez-vous que le modèle des projets est correct
+      model: 'Projects', // Le modèle des projets
       key: 'id'
     }
   }
@@ -32,10 +32,9 @@ Game.init({
   timestamps: true,
 });
 
-// Relations
+// Relations entre les modèles
 Game.associate = (models) => {
   Game.belongsTo(models.Project, { foreignKey: 'projectId' }); // Un jeu appartient à un projet
 };
 
 module.exports = Game;
-

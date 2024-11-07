@@ -9,14 +9,9 @@ Category.init({
     autoIncrement: true,
     primaryKey: true,
   },
-  name: {
+  name: { // Nom de la catégorie
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
-  },
-  description: {  // Ajout du champ description
-    type: DataTypes.TEXT, // Utilisation de TEXT pour une description plus longue
-    allowNull: true,      // Ce champ peut être nul
   },
 }, {
   sequelize,
